@@ -10,7 +10,10 @@ connectDB();
 // ==========================================
 // 🔥 SECURITY LOCK: Tight CORS & Origin Control
 // ==========================================
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = [
+    'http://localhost:5173', 
+    'https://booking-hub-frontend-7v7l.onrender.com'
+];
 
 app.use(cors({
     origin: function (origin, callback) {
@@ -27,10 +30,10 @@ app.use(cors({
 app.use(express.json());
 
 // ==========================================
-// 🛡️ BULLETPROOF MIDDLEWARE: Postman/Hoppscotch Blocker
+// 🛡️ BULLETPROOF MIDDLEWARE: Temporarily Disabled for Testing
 // ==========================================
+/*
 app.use((req, res, next) => {
-    // Test route '/' ko bypass karo taaki browser pe server check ho sake
     if (req.path === '/') return next();
 
     const frontendKey = req.headers['x-api-secret'];
@@ -38,11 +41,12 @@ app.use((req, res, next) => {
     if (!frontendKey || frontendKey !== process.env.BACKEND_API_SECRET) {
         return res.status(403).json({ 
             success: false, 
-            message: "Access Denied! Direct API requests from Postman, Hoppscotch, or external scripts are strictly blocked." 
+            message: "Access Denied! Direct API requests are strictly blocked." 
         });
     }
     next();
 });
+*/
 
 // Routes Links
 app.use('/api/auth', require('./routes/authRoutes'));
