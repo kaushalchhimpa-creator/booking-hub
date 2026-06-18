@@ -80,7 +80,7 @@ const Register = () => {
       }
 
       const response = await axios.post(
-        "https://booking-hub-backend-plga.onrender.com//api/auth/register",
+        "https://booking-hub-backend-plga.onrender.com/api/auth/register",
         payload,
       );
       if (response.data) {
