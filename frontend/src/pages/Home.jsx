@@ -39,7 +39,7 @@ const Home = () => {
       const userState = user?.state || "";
 
       const response = await axios.get(
-        `http://localhost:5000/api/bookings/public-providers?category=${selectedCategory}&city=${userCity}&state=${userState}`,
+        `https://booking-hub-backend-plga.onrender.com//api/bookings/public-providers?category=${selectedCategory}&city=${userCity}&state=${userState}`,
       );
       if (response.data?.success) {
         setProviders(response.data.data);
@@ -68,7 +68,7 @@ const Home = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/bookings/book",
+        "https://booking-hub-backend-plga.onrender.com//api/bookings/book",
         {
           category: selectedCategory,
           bookingDate,

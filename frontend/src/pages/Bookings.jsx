@@ -26,7 +26,7 @@ const Bookings = () => {
     if (showLoader) setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/bookings/my-bookings",
+        "https://booking-hub-backend-plga.onrender.com//api/bookings/my-bookings",
         { headers: { Authorization: `Bearer ${token}` } },
       );
       if (response.data?.success) {
@@ -42,7 +42,7 @@ const Bookings = () => {
   const handleGrabJob = async (bookingId) => {
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/bookings/status",
+        "https://booking-hub-backend-plga.onrender.com//api/bookings/status",
         { bookingId, status: "Accepted", providerEta: "30 Mins" },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -58,7 +58,7 @@ const Bookings = () => {
   const handleSatisfy = async (bookingId) => {
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/bookings/satisfy",
+        "https://booking-hub-backend-plga.onrender.com//api/bookings/satisfy",
         { bookingId },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -74,7 +74,7 @@ const Bookings = () => {
   const handleFinalComplete = async (bookingId) => {
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/bookings/final-complete",
+        "https://booking-hub-backend-plga.onrender.com//api/bookings/final-complete",
         { bookingId },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -90,7 +90,7 @@ const Bookings = () => {
   const handleRatingSubmit = async () => {
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/bookings/rate",
+        "https://booking-hub-backend-plga.onrender.com//api/bookings/rate",
         {
           bookingId: selectedBookingId,
           rating: ratingValue,
