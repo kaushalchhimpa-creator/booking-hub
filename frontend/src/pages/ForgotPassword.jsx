@@ -17,7 +17,7 @@ const ForgotPassword = () => {
     setMessage("");
     try {
       const response = await axios.post(
-        "https://booking-hub-backend-plga.onrender.com//api/auth/forgot-password",
+        "https://booking-hub-backend-plga.onrender.com/api/auth/forgot-password",
         { email },
       );
       if (response.data?.success) {
@@ -39,7 +39,7 @@ const ForgotPassword = () => {
     setMessage("");
     try {
       const response = await axios.post(
-        "https://booking-hub-backend-plga.onrender.com//api/auth/reset-password",
+        "https://booking-hub-backend-plga.onrender.com/api/auth/reset-password",
         {
           email,
           otp,
