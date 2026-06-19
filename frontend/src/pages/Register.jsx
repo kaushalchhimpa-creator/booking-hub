@@ -8,6 +8,8 @@ const Register = () => {
     email: "",
     password: "",
     contactNumber: "",
+    state: "",
+    city: "",
     role: "User",
     category: "",
     experience: "",
@@ -79,7 +81,7 @@ const Register = () => {
               Email Address
             </label>
             <input
-              type="email"
+              type="type"
               name="email"
               required
               value={formData.email}
@@ -119,6 +121,38 @@ const Register = () => {
             />
           </div>
 
+          {/* 🛠️ FIXED: State and City fields added in layout */}
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
+                State
+              </label>
+              <input
+                type="text"
+                name="state"
+                required
+                value={formData.state}
+                onChange={handleChange}
+                placeholder="Rajasthan"
+                className="w-full px-3 py-2 border text-xs rounded-xl focus:outline-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
+                City
+              </label>
+              <input
+                type="text"
+                name="city"
+                required
+                value={formData.city}
+                onChange={handleChange}
+                placeholder="Sri Ganganagar"
+                className="w-full px-3 py-2 border text-xs rounded-xl focus:outline-blue-500"
+              />
+            </div>
+          </div>
+
           <div>
             <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
               Select Profile Role
@@ -154,6 +188,10 @@ const Register = () => {
                   <option value="Plumber">Plumber</option>
                   <option value="Cleaner">Cleaner</option>
                   <option value="Carpenter">Carpenter</option>
+                  <option value="Furniture">Furniture</option>
+                  <option value="Painter">Painter</option>
+                  <option value="Mechanic">Mechanic</option>
+                  <option value="AC Repair">AC Repair</option>
                 </select>
               </div>
 
