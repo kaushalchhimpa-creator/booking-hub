@@ -181,10 +181,20 @@ const Home = () => {
                     key={p._id}
                     className="p-4 border border-gray-100 rounded-xl bg-gray-50/50 flex justify-between items-center gap-2"
                   >
-                    <div>
-                      <h3 className="font-bold text-sm text-gray-800 uppercase">
+                    <div className="space-y-1.5">
+                      <h3 className="font-black text-sm text-gray-800 uppercase">
                         {p.name}
                       </h3>
+
+                      {/* FIXED: Expert Charges and Experience UI blocks added perfectly */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[11px] font-black text-green-600 bg-green-50/80 px-2 py-0.5 rounded-md border border-green-100">
+                          ₹{p.pricePerHour || 0}/hr
+                        </span>
+                        <span className="text-[10px] font-bold text-gray-600 bg-gray-200/60 px-2 py-0.5 rounded-md">
+                          {p.experience || 0} Yrs Exp
+                        </span>
+                      </div>
 
                       <div className="flex flex-col gap-0.5 mt-1">
                         <p className="text-[10px] font-bold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded-sm inline-block w-fit">
@@ -201,7 +211,7 @@ const Home = () => {
                           jobs
                         </p>
                         <p className="text-[9px] font-bold text-gray-400">
-                          📍 Locality: {p.city}
+                          📍 Locality: {p.city || "Sri Ganganagar"}
                         </p>
                       </div>
                     </div>
