@@ -2,9 +2,16 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-// 📊 State aur City ka dynamic data jo aapne copy me banaya tha
+// 📊 State aur City ka correct data
 const stateCityData = {
-  Rajasthan: ["Sgnr", "Jaipur", "Jodhpur", "Udaipur", "Bikaner", "Kota"],
+  Rajasthan: [
+    "Sri Ganganagar",
+    "Jaipur",
+    "Jodhpur",
+    "Udaipur",
+    "Bikaner",
+    "Kota",
+  ],
   Punjab: ["Amritsar", "Ludhiana", "Jalandhar", "Patiala", "Bathinda"],
   Haryana: ["Gurugram", "Faridabad", "Hisar", "Ambala", "Panipat"],
   Delhi: ["New Delhi", "North", "South", "West", "East"],
@@ -136,7 +143,7 @@ const Register = () => {
             />
           </div>
 
-          {/* 🛠️ FIXED: State and City Dynamic Select Dropdowns */}
+          {/* Dynamic State and City Select Dropdowns */}
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
