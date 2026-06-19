@@ -132,14 +132,15 @@ const Bookings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-6xl mx-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg font-black text-gray-800 flex items-center gap-2">
+    <div className="min-h-screen bg-gray-50 p-3 sm:p-6">
+      <div className="max-w-6xl mx-auto bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100">
+        {/* Main Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 pb-2 border-b border-gray-50">
+          <h2 className="text-base sm:text-lg font-black text-gray-800 flex items-center gap-2">
             Live Request Action Console{" "}
             <span className="w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
           </h2>
-          <span className="text-[10px] text-gray-400 bg-gray-100 px-2 py-1 rounded font-semibold">
+          <span className="text-[10px] text-gray-400 bg-gray-100 px-2 py-1 rounded font-semibold shrink-0">
             🔄 Auto-Sync On (5s)
           </span>
         </div>
@@ -149,150 +150,282 @@ const Bookings = () => {
             No active broadcasts available in the live pool.
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="bg-gray-50 text-gray-500 font-bold border-b border-gray-100">
-                  <th className="p-3">Client / Expert Name</th>
-                  <th className="p-3">Category</th>
-                  <th className="p-3">Mutual Contact Info</th>
-                  <th className="p-3">Live Timeline / ETA</th>
-                  <th className="p-3">State</th>
-                  <th className="p-3 text-right">Action Portal</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 text-gray-700">
-                {bookings.map((b) => (
-                  <tr
-                    key={b._id}
-                    className="hover:bg-gray-50/50 transition-colors"
-                  >
-                    <td className="p-3 font-medium text-gray-800">
-                      <div>
-                        <span className="font-bold block">
-                          👤 Client: {b.user?.name || "User"}
+          <div>
+            {/* 🖥️ DESKTOP VIEW: Tables are active on laptop screens */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 text-gray-500 font-bold border-b border-gray-100">
+                    <th className="p-3">Client / Expert Name</th>
+                    <th className="p-3">Category</th>
+                    <th className="p-3">Mutual Contact Info</th>
+                    <th className="p-3">Live Timeline / ETA</th>
+                    <th className="p-3">State</th>
+                    <th className="p-3 text-right">Action Portal</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 text-gray-700">
+                  {bookings.map((b) => (
+                    <tr
+                      key={b._id}
+                      className="hover:bg-gray-50/50 transition-colors"
+                    >
+                      <td className="p-3 font-medium text-gray-800">
+                        <div>
+                          <span className="font-bold block">
+                            👤 Client: {b.user?.name || "User"}
+                          </span>
+                          {b.provider && (
+                            <span className="text-[11px] text-blue-600 font-semibold block mt-1">
+                              ⚡ Expert: {b.provider?.name || "Assigned"}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-3">
+                        <span className="bg-blue-50 text-blue-600 px-2.5 py-1 rounded-md font-bold text-[10px]">
+                          {b.category}
                         </span>
-                        {b.provider && (
-                          <span className="text-[11px] text-blue-600 font-semibold block mt-1">
-                            ⚡ Expert: {b.provider?.name || "Assigned"}
+                      </td>
+                      <td className="p-3">
+                        {b.status === "Pending" ? (
+                          <span className="bg-amber-50 text-amber-700 px-2 py-1 rounded border border-amber-200 font-medium text-[11px]">
+                            🔒 Hidden until Grabbed
+                          </span>
+                        ) : (
+                          <span className="bg-green-50 text-green-700 px-2 py-1 rounded font-bold text-[11px]">
+                            👤 Contact:{" "}
+                            {isRequester(b)
+                              ? b.provider?.contactNumber || "9876543210"
+                              : b.user?.contactNumber || "1234567890"}
                           </span>
                         )}
-                      </div>
-                    </td>
-
-                    <td className="p-3">
-                      <span className="bg-blue-50 text-blue-600 px-2.5 py-1 rounded-md font-bold text-[10px]">
-                        {b.category}
-                      </span>
-                    </td>
-
-                    <td className="p-3">
-                      {b.status === "Pending" ? (
-                        <span className="bg-amber-50 text-amber-700 px-2 py-1 rounded border border-amber-200 font-medium text-[11px]">
-                          🔒 Hidden until Grabbed
+                      </td>
+                      <td className="p-3 font-medium text-gray-500">
+                        {b.status === "Pending"
+                          ? "Limit: 30 mins"
+                          : `ETA: ${b.providerEta || "30 Mins"}`}
+                      </td>
+                      <td className="p-3">
+                        <span
+                          className={`px-2 py-0.5 rounded font-black text-[10px] tracking-wide uppercase ${
+                            b.status === "Pending"
+                              ? "text-amber-600 bg-amber-50"
+                              : b.status === "Accepted"
+                                ? "text-blue-600 bg-blue-50"
+                                : b.status === "Satisfied"
+                                  ? "text-indigo-600 bg-indigo-50"
+                                  : "text-green-600 bg-green-50"
+                          }`}
+                        >
+                          {b.status}
                         </span>
+                      </td>
+                      <td className="p-3 text-right space-x-1">
+                        {user?.role === "Provider" &&
+                          b.status === "Pending" &&
+                          (isRequester(b) ? (
+                            <span className="text-[10px] text-gray-400 italic">
+                              Self Post
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handleGrabJob(b._id)}
+                              className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1 rounded-md font-bold text-[10px] shadow-xs"
+                            >
+                              Grab Job ⚡
+                            </button>
+                          ))}
+                        {isRequester(b) && b.status === "Accepted" && (
+                          <button
+                            onClick={() => handleSatisfy(b._id)}
+                            className="bg-blue-600 text-white px-3 py-1 rounded-md font-bold text-[10px]"
+                          >
+                            Mark Satisfied ✔
+                          </button>
+                        )}
+                        {isAssignedProvider(b) && b.status === "Satisfied" && (
+                          <button
+                            onClick={() => handleFinalComplete(b._id)}
+                            className="bg-green-600 text-white px-3 py-1 rounded-md font-bold text-[10px]"
+                          >
+                            Final Complete 💰
+                          </button>
+                        )}
+                        {b.status === "Completed" &&
+                          isRequester(b) &&
+                          !b.rating && (
+                            <button
+                              onClick={() => {
+                                setSelectedBookingId(b._id);
+                                setShowRateModal(true);
+                              }}
+                              className="bg-yellow-500 text-white px-2 py-1 rounded-md font-bold text-[10px]"
+                            >
+                              Rate Expert ⭐
+                            </button>
+                          )}
+                        {b.status === "Completed" &&
+                          (b.rating || !isRequester(b)) && (
+                            <div className="text-right">
+                              <span className="text-gray-400 font-bold text-[10px] block">
+                                Job Done 🎉
+                              </span>
+                              {b.rating && (
+                                <span className="text-amber-500 font-black text-[10px] block mt-0.5">
+                                  Given: ⭐ {b.rating}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* 📱 MOBILE CARD VIEW: Automatically transforms on smartphone viewports */}
+            <div className="grid grid-cols-1 gap-4 md:hidden">
+              {bookings.map((b) => (
+                <div
+                  key={b._id}
+                  className="p-4 rounded-xl border border-gray-100 bg-gray-50/60 space-y-3.5 shadow-2xs"
+                >
+                  {/* Top Panel: Category & Status */}
+                  <div className="flex justify-between items-center">
+                    <span className="bg-blue-50 text-blue-600 px-2.5 py-0.5 rounded-md font-bold text-[10px] uppercase tracking-wide">
+                      {b.category}
+                    </span>
+                    <span
+                      className={`px-2 py-0.5 rounded font-black text-[9px] tracking-wider uppercase ${
+                        b.status === "Pending"
+                          ? "text-amber-600 bg-amber-50"
+                          : b.status === "Accepted"
+                            ? "text-blue-600 bg-blue-50"
+                            : b.status === "Satisfied"
+                              ? "text-indigo-600 bg-indigo-50"
+                              : "text-green-600 bg-green-50"
+                      }`}
+                    >
+                      {b.status}
+                    </span>
+                  </div>
+
+                  {/* Matrix Block: Client/Expert Profiles */}
+                  <div className="bg-white p-3 rounded-xl border border-gray-100 space-y-1.5 shadow-3xs">
+                    <div className="text-xs font-bold text-gray-800 flex items-center gap-1">
+                      <span className="text-gray-400">👤 Client:</span>
+                      <span className="uppercase font-black text-gray-900">
+                        {b.user?.name || "User"}
+                      </span>
+                    </div>
+                    {b.provider && (
+                      <div className="text-xs font-bold text-blue-600 flex items-center gap-1 pt-1.5 border-t border-gray-100/50">
+                        <span className="text-blue-400">⚡ Expert:</span>
+                        <span className="uppercase font-black text-blue-700">
+                          {b.provider?.name || "Assigned"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Metadata Row: Contact Number & Timeline Info */}
+                  <div className="flex flex-col gap-2 pt-0.5">
+                    <div className="text-[11px] font-medium text-gray-500 bg-white border border-gray-100 p-2 rounded-lg flex justify-between items-center">
+                      <span className="text-gray-400 font-bold">
+                        Timeline / ETA:
+                      </span>
+                      <span className="font-black text-gray-700">
+                        {b.status === "Pending"
+                          ? "Limit: 30 mins"
+                          : `ETA: ${b.providerEta || "30 Mins"}`}
+                      </span>
+                    </div>
+
+                    <div className="w-full">
+                      {b.status === "Pending" ? (
+                        <div className="bg-amber-50 text-amber-700 p-2 rounded-lg border border-amber-100 font-bold text-[11px] text-center shadow-3xs">
+                          🔒 Hidden until Grabbed
+                        </div>
                       ) : (
-                        <span className="bg-green-50 text-green-700 px-2 py-1 rounded font-bold text-[11px]">
-                          👤 Contact:{" "}
+                        <div className="bg-green-50 text-green-700 p-2 rounded-lg border border-green-100 font-bold text-[11px] text-center shadow-3xs">
+                          📞 Contact:{" "}
                           {isRequester(b)
                             ? b.provider?.contactNumber || "9876543210"
                             : b.user?.contactNumber || "1234567890"}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Action Row panel */}
+                  <div className="pt-2 border-t border-gray-200/40 flex justify-end">
+                    {user?.role === "Provider" &&
+                      b.status === "Pending" &&
+                      (isRequester(b) ? (
+                        <span className="text-[10px] text-gray-400 italic font-bold">
+                          Self Post
                         </span>
-                      )}
-                    </td>
-
-                    <td className="p-3 font-medium text-gray-500">
-                      {b.status === "Pending"
-                        ? "Limit: 30 mins"
-                        : `ETA: ${b.providerEta || "30 Mins"}`}
-                    </td>
-
-                    <td className="p-3">
-                      <span
-                        className={`px-2 py-0.5 rounded font-black text-[10px] tracking-wide uppercase ${
-                          b.status === "Pending"
-                            ? "text-amber-600 bg-amber-50"
-                            : b.status === "Accepted"
-                              ? "text-blue-600 bg-blue-50"
-                              : b.status === "Satisfied"
-                                ? "text-indigo-600 bg-indigo-50"
-                                : "text-green-600 bg-green-50"
-                        }`}
+                      ) : (
+                        <button
+                          onClick={() => handleGrabJob(b._id)}
+                          className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-2 rounded-xl font-bold text-xs shadow-xs"
+                        >
+                          Grab Job ⚡
+                        </button>
+                      ))}
+                    {isRequester(b) && b.status === "Accepted" && (
+                      <button
+                        onClick={() => handleSatisfy(b._id)}
+                        className="w-full bg-blue-600 text-white py-2 rounded-xl font-bold text-xs shadow-xs"
                       >
-                        {b.status}
-                      </span>
-                    </td>
-
-                    <td className="p-3 text-right space-x-1">
-                      {user?.role === "Provider" &&
-                        b.status === "Pending" &&
-                        (isRequester(b) ? (
-                          <span className="text-[10px] text-gray-400 italic">
-                            Self Post
+                        Mark Satisfied ✔
+                      </button>
+                    )}
+                    {isAssignedProvider(b) && b.status === "Satisfied" && (
+                      <button
+                        onClick={() => handleFinalComplete(b._id)}
+                        className="w-full bg-green-600 text-white py-2 rounded-xl font-bold text-xs shadow-xs"
+                      >
+                        Final Complete 💰
+                      </button>
+                    )}
+                    {b.status === "Completed" &&
+                      isRequester(b) &&
+                      !b.rating && (
+                        <button
+                          onClick={() => {
+                            setSelectedBookingId(b._id);
+                            setShowRateModal(true);
+                          }}
+                          className="w-full bg-yellow-500 text-white py-2 rounded-xl font-bold text-xs shadow-xs"
+                        >
+                          Rate Expert ⭐
+                        </button>
+                      )}
+                    {b.status === "Completed" &&
+                      (b.rating || !isRequester(b)) && (
+                        <div className="w-full text-center bg-gray-100 p-2 rounded-lg flex justify-between items-center px-3">
+                          <span className="text-gray-400 font-bold text-xs">
+                            Job Done 🎉
                           </span>
-                        ) : (
-                          <button
-                            onClick={() => handleGrabJob(b._id)}
-                            className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1 rounded-md font-bold text-[10px] shadow-xs"
-                          >
-                            Grab Job ⚡
-                          </button>
-                        ))}
-
-                      {isRequester(b) && b.status === "Accepted" && (
-                        <button
-                          onClick={() => handleSatisfy(b._id)}
-                          className="bg-blue-600 text-white px-3 py-1 rounded-md font-bold text-[10px]"
-                        >
-                          Mark Satisfied ✔
-                        </button>
-                      )}
-
-                      {isAssignedProvider(b) && b.status === "Satisfied" && (
-                        <button
-                          onClick={() => handleFinalComplete(b._id)}
-                          className="bg-green-600 text-white px-3 py-1 rounded-md font-bold text-[10px]"
-                        >
-                          Final Complete 💰
-                        </button>
-                      )}
-
-                      {b.status === "Completed" &&
-                        isRequester(b) &&
-                        !b.rating && (
-                          <button
-                            onClick={() => {
-                              setSelectedBookingId(b._id);
-                              setShowRateModal(true);
-                            }}
-                            className="bg-yellow-500 text-white px-2 py-1 rounded-md font-bold text-[10px]"
-                          >
-                            Rate Expert ⭐
-                          </button>
-                        )}
-
-                      {b.status === "Completed" &&
-                        (b.rating || !isRequester(b)) && (
-                          <div className="text-right">
-                            <span className="text-gray-400 font-bold text-[10px] block">
-                              Job Done 🎉
+                          {b.rating && (
+                            <span className="text-amber-500 font-black text-xs">
+                              Given: ⭐ {b.rating}
                             </span>
-                            {b.rating && (
-                              <span className="text-amber-500 font-black text-[10px] block mt-0.5">
-                                Given: ⭐ {b.rating}
-                              </span>
-                            )}
-                          </div>
-                        )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                          )}
+                        </div>
+                      )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
 
+      {/* RATINGS MODAL POPUP */}
       {showRateModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white p-5 rounded-2xl shadow-xl max-w-sm w-full border">
