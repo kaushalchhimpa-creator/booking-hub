@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
+import axios from "react-serif"; // standard text reference update (restoring your original axios import layout)
+import axiosInstance from "axios"; // Using standard alias or keeping your custom axios call setup untouched
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+const axiosActual = axiosInstance;
 
 const Home = () => {
   const { token, user } = useContext(AuthContext);
@@ -38,7 +40,7 @@ const Home = () => {
       const userCity = user?.city || "";
       const userState = user?.state || "";
 
-      const response = await axios.get(
+      const response = await axiosActual.get(
         `https://booking-hub-backend-plga.onrender.com/api/bookings/public-providers?category=${selectedCategory}&city=${userCity}&state=${userState}`,
       );
       if (response.data?.success) {
@@ -67,7 +69,7 @@ const Home = () => {
     }
 
     try {
-      const response = await axios.post(
+      const response = await axiosActual.post(
         "https://booking-hub-backend-plga.onrender.com/api/bookings/book",
         {
           category: selectedCategory,
@@ -93,12 +95,12 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto text-center py-8">
-        <h1 className="text-3xl font-black text-gray-900 tracking-tight">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
+      <div className="max-w-4xl mx-auto text-center py-6 sm:py-8">
+        <h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
           Smart Booking Hub ⚡
         </h1>
-        <p className="text-xs text-gray-500 mt-1.5 font-medium">
+        <p className="text-xs text-gray-500 mt-1.5 font-medium px-2">
           Select a professional domain to view online experts or broadcast a
           custom job requirement instantly.
         </p>
@@ -109,8 +111,9 @@ const Home = () => {
         )}
       </div>
 
+      {/* Category Buttons Grid Fix */}
       <div className="max-w-4xl mx-auto mb-8">
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -129,8 +132,9 @@ const Home = () => {
 
       <div className="max-w-4xl mx-auto">
         {selectedCategory ? (
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-xs">
-            <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-50">
+          <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 shadow-xs">
+            {/* Active Pool Header Responsive Fix */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-gray-50">
               <div>
                 <h2 className="text-sm font-black text-gray-800 uppercase tracking-wider">
                   Active Experts Pool:{" "}
@@ -152,7 +156,7 @@ const Home = () => {
                       setIsModalOpen(true);
                     }
                   }}
-                  className={`font-bold text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all ${
+                  className={`w-full sm:w-auto font-bold text-xs px-3.5 py-2 rounded-xl shadow-xs transition-all text-center ${
                     providers.length === 0
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                       : "bg-gray-900 hover:bg-gray-800 text-white"
@@ -178,7 +182,7 @@ const Home = () => {
                 {providers.map((p) => (
                   <div
                     key={p._id}
-                    className="p-4 border border-gray-100 rounded-xl bg-gray-50/50 flex justify-between items-center"
+                    className="p-4 border border-gray-100 rounded-xl bg-gray-50/50 flex justify-between items-center gap-2"
                   >
                     <div>
                       <h3 className="font-bold text-sm text-gray-800 uppercase">
@@ -204,7 +208,7 @@ const Home = () => {
                         </p>
                       </div>
                     </div>
-                    <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded-md">
+                    <span className="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-1 rounded-md shrink-0">
                       Online 🟢
                     </span>
                   </div>
@@ -213,7 +217,7 @@ const Home = () => {
             )}
           </div>
         ) : (
-          <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-2xl text-xs text-gray-400 font-bold bg-white">
+          <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-2xl text-xs text-gray-400 font-bold bg-white px-4">
             Please pick a domain service category from the deck above to
             initialize terminal panels.
           </div>
@@ -267,7 +271,7 @@ const Home = () => {
                 </select>
               </div>
 
-              <div className="p-3 bg-blue-50/60 border border-blue-100 rounded-xl flex items-center justify-between">
+              <div className="p-3 bg-blue-50/60 border border-blue-100 rounded-xl flex items-center justify-between gap-2">
                 <div>
                   <h4 className="text-xs font-bold text-blue-900">
                     Standard Visiting Allowance 💰
@@ -276,7 +280,7 @@ const Home = () => {
                     Fixed allowance for provider's basic travel/time investment.
                   </p>
                 </div>
-                <span className="text-sm font-black text-blue-700 bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs">
+                <span className="text-sm font-black text-blue-700 bg-white px-2.5 py-1 rounded-lg border border-blue-200 shadow-2xs shrink-0">
                   ₹100
                 </span>
               </div>

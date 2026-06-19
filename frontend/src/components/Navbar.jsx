@@ -17,7 +17,8 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-slate-100 border-b border-slate-200 px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
+    <nav className="bg-slate-100 border-b border-slate-200 px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm sticky top-0 z-50">
+      {/* Logo Section */}
       <div
         className="font-extrabold text-xl text-blue-600 cursor-pointer flex items-center gap-1"
         onClick={() => navigate("/")}
@@ -25,7 +26,8 @@ const Navbar = () => {
         Booking Hub <span className="text-amber-500">⚡</span>
       </div>
 
-      <div className="flex items-center gap-6">
+      {/* Navigation Links and Profile info */}
+      <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 w-full sm:w-auto">
         <Link
           to="/"
           className="text-sm font-semibold text-gray-700 hover:text-blue-600 transition-all"
