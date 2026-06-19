@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "react-serif"; // standard text reference update (restoring your original axios import layout)
-import axiosInstance from "axios"; // Using standard alias or keeping your custom axios call setup untouched
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-const axiosActual = axiosInstance;
 
 const Home = () => {
   const { token, user } = useContext(AuthContext);
@@ -40,7 +38,7 @@ const Home = () => {
       const userCity = user?.city || "";
       const userState = user?.state || "";
 
-      const response = await axiosActual.get(
+      const response = await axios.get(
         `https://booking-hub-backend-plga.onrender.com/api/bookings/public-providers?category=${selectedCategory}&city=${userCity}&state=${userState}`,
       );
       if (response.data?.success) {
@@ -69,7 +67,7 @@ const Home = () => {
     }
 
     try {
-      const response = await axiosActual.post(
+      const response = await axios.post(
         "https://booking-hub-backend-plga.onrender.com/api/bookings/book",
         {
           category: selectedCategory,
@@ -133,7 +131,6 @@ const Home = () => {
       <div className="max-w-4xl mx-auto">
         {selectedCategory ? (
           <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 shadow-xs">
-            {/* Active Pool Header Responsive Fix */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-gray-50">
               <div>
                 <h2 className="text-sm font-black text-gray-800 uppercase tracking-wider">
