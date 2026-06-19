@@ -8,27 +8,23 @@ const jwt = require('jsonwebtoken');
 const otpStore = {};
 
 // ==========================================
-// 1. REGISTER CONTROLLER (🔒 FIXED: Fields added and safely handled)
+// 1. REGISTER CONTROLLER (🔒 FIXED: City & State restriction removed!)
 // ==========================================
 exports.register = async (req, res) => {
     try {
         const { name, email, password, role, city, state, category, pricePerHour, experience, contactNumber } = req.body;
         
-        if(!city || !state) {
-            return res.status(400).json({ success: false, message: "City and State fields are required." });
-        }
 
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-        
         const user = await User.create({ 
             name, 
             email, 
             password, 
             role, 
-            city, 
-            state, 
+            city: city || 'Not Specified', // Fallback value set if missing from UI
+            state: state || 'Not Specified', // Fallback value set if missing from UI
             category,
             pricePerHour: role === 'Provider' ? Number(pricePerHour || 0) : 0,
             experience: role === 'Provider' ? Number(experience || 0) : 0,
