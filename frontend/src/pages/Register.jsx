@@ -81,7 +81,7 @@ const Register = () => {
               Email Address
             </label>
             <input
-              type="type"
+              type="email"
               name="email"
               required
               value={formData.email}
@@ -121,7 +121,6 @@ const Register = () => {
             />
           </div>
 
-          {/* 🛠️ FIXED: State and City fields added in layout */}
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
@@ -171,7 +170,7 @@ const Register = () => {
           </div>
 
           {formData.role === "Provider" && (
-            <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100/50 space-y-3 animate-fadeIn">
+            <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100/50 space-y-3">
               <div>
                 <label className="block text-[11px] font-bold text-blue-600 uppercase mb-1">
                   Expert Category
