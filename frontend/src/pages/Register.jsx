@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
+// 📊 State aur City ka dynamic data jo aapne copy me banaya tha
+const stateCityData = {
+  Rajasthan: ["Sgnr", "Jaipur", "Jodhpur", "Udaipur", "Bikaner", "Kota"],
+  Punjab: ["Amritsar", "Ludhiana", "Jalandhar", "Patiala", "Bathinda"],
+  Haryana: ["Gurugram", "Faridabad", "Hisar", "Ambala", "Panipat"],
+  Delhi: ["New Delhi", "North", "South", "West", "East"],
+};
+
 const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -20,7 +28,14 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Agar State badle, toh City ko reset kar do taaki purani city select na reh jaye
+    if (name === "state") {
+      setFormData({ ...formData, state: value, city: "" });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -121,34 +136,48 @@ const Register = () => {
             />
           </div>
 
+          {/* 🛠️ FIXED: State and City Dynamic Select Dropdowns */}
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
                 State
               </label>
-              <input
-                type="text"
+              <select
                 name="state"
                 required
                 value={formData.state}
                 onChange={handleChange}
-                placeholder="Rajasthan"
-                className="w-full px-3 py-2 border text-xs rounded-xl focus:outline-blue-500"
-              />
+                className="w-full px-3 py-2 border text-xs rounded-xl bg-white font-semibold focus:outline-blue-500"
+              >
+                <option value="">-- Select State --</option>
+                {Object.keys(stateCityData).map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
+              </select>
             </div>
+
             <div>
               <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
                 City
               </label>
-              <input
-                type="text"
+              <select
                 name="city"
                 required
                 value={formData.city}
                 onChange={handleChange}
-                placeholder="Sri Ganganagar"
-                className="w-full px-3 py-2 border text-xs rounded-xl focus:outline-blue-500"
-              />
+                disabled={!formData.state}
+                className="w-full px-3 py-2 border text-xs rounded-xl bg-white font-semibold focus:outline-blue-500 disabled:bg-gray-100"
+              >
+                <option value="">-- Select City --</option>
+                {formData.state &&
+                  stateCityData[formData.state].map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+              </select>
             </div>
           </div>
 
