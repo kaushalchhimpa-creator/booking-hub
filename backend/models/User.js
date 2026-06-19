@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ['Customer', 'Provider'], default: 'Customer' },
+    role: { type: String, enum: ['Customer', 'Provider', 'User'], default: 'User' },
     category: { type: String, default: '' }, 
     pricePerHour: { type: Number, default: 0 },
     experience: { type: Number, default: 0 },
@@ -17,7 +17,6 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.pre('save', async function () {
-    
     if (!this.isModified('password')) return;
     
     try {
