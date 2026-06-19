@@ -151,13 +151,14 @@ const Bookings = () => {
           </div>
         ) : (
           <div>
-            {/* 🖥️ DESKTOP VIEW: Tables are active on laptop screens */}
+            {/* 🖥️ DESKTOP VIEW */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="bg-gray-50 text-gray-500 font-bold border-b border-gray-100">
                     <th className="p-3">Client / Expert Name</th>
                     <th className="p-3">Category</th>
+                    <th className="p-3">Expert Charges / Experience</th>
                     <th className="p-3">Mutual Contact Info</th>
                     <th className="p-3">Live Timeline / ETA</th>
                     <th className="p-3">State</th>
@@ -187,6 +188,24 @@ const Bookings = () => {
                           {b.category}
                         </span>
                       </td>
+
+                      <td className="p-3 font-medium">
+                        {b.provider ? (
+                          <div>
+                            <span className="text-green-600 font-bold block">
+                              ₹{b.provider.pricePerHour || "0"}/hr
+                            </span>
+                            <span className="text-gray-500 text-[11px] block">
+                              {b.provider.experience || "0"} Yrs Exp
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-gray-400 italic text-[11px]">
+                            No Expert yet
+                          </span>
+                        )}
+                      </td>
+
                       <td className="p-3">
                         {b.status === "Pending" ? (
                           <span className="bg-amber-50 text-amber-700 px-2 py-1 rounded border border-amber-200 font-medium text-[11px]">
@@ -285,14 +304,12 @@ const Bookings = () => {
               </table>
             </div>
 
-            {/* 📱 MOBILE CARD VIEW: Automatically transforms on smartphone viewports */}
             <div className="grid grid-cols-1 gap-4 md:hidden">
               {bookings.map((b) => (
                 <div
                   key={b._id}
                   className="p-4 rounded-xl border border-gray-100 bg-gray-50/60 space-y-3.5 shadow-2xs"
                 >
-                  {/* Top Panel: Category & Status */}
                   <div className="flex justify-between items-center">
                     <span className="bg-blue-50 text-blue-600 px-2.5 py-0.5 rounded-md font-bold text-[10px] uppercase tracking-wide">
                       {b.category}
@@ -312,7 +329,6 @@ const Bookings = () => {
                     </span>
                   </div>
 
-                  {/* Matrix Block: Client/Expert Profiles */}
                   <div className="bg-white p-3 rounded-xl border border-gray-100 space-y-1.5 shadow-3xs">
                     <div className="text-xs font-bold text-gray-800 flex items-center gap-1">
                       <span className="text-gray-400">👤 Client:</span>
@@ -320,17 +336,26 @@ const Bookings = () => {
                         {b.user?.name || "User"}
                       </span>
                     </div>
+
                     {b.provider && (
-                      <div className="text-xs font-bold text-blue-600 flex items-center gap-1 pt-1.5 border-t border-gray-100/50">
-                        <span className="text-blue-400">⚡ Expert:</span>
-                        <span className="uppercase font-black text-blue-700">
-                          {b.provider?.name || "Assigned"}
-                        </span>
+                      <div className="pt-1.5 border-t border-gray-100/50 space-y-1">
+                        <div className="text-xs font-bold text-blue-600 flex items-center gap-1">
+                          <span className="text-blue-400">⚡ Expert:</span>
+                          <span className="uppercase font-black text-blue-700">
+                            {b.provider?.name || "Assigned"}
+                          </span>
+                        </div>
+                        {/* --- Mobile Price/Exp block --- */}
+                        <div className="text-[11px] font-bold text-gray-500 flex gap-2">
+                          <span className="text-green-600">
+                            ₹{b.provider.pricePerHour || "0"}/hr
+                          </span>
+                          <span>• {b.provider.experience || "0"} Yrs Exp</span>
+                        </div>
                       </div>
                     )}
                   </div>
 
-                  {/* Metadata Row: Contact Number & Timeline Info */}
                   <div className="flex flex-col gap-2 pt-0.5">
                     <div className="text-[11px] font-medium text-gray-500 bg-white border border-gray-100 p-2 rounded-lg flex justify-between items-center">
                       <span className="text-gray-400 font-bold">
@@ -359,7 +384,6 @@ const Bookings = () => {
                     </div>
                   </div>
 
-                  {/* Action Row panel */}
                   <div className="pt-2 border-t border-gray-200/40 flex justify-end">
                     {user?.role === "Provider" &&
                       b.status === "Pending" &&
@@ -425,7 +449,6 @@ const Bookings = () => {
         )}
       </div>
 
-      {/* RATINGS MODAL POPUP */}
       {showRateModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white p-5 rounded-2xl shadow-xl max-w-sm w-full border">

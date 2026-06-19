@@ -1,311 +1,212 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
-const locationData = {
-  Rajasthan: [
-    "Sri Ganganagar",
-    "Jaipur",
-    "Jodhpur",
-    "Udaipur",
-    "Bikaner",
-    "Kota",
-  ],
-  Punjab: ["Amritsar", "Ludhiana", "Jalandhar", "Patiala", "Bathinda"],
-  Haryana: ["Gurugram", "Faridabad", "Hisar", "Ambala", "Panipat"],
-  Delhi: [
-    "New Delhi",
-    "North Delhi",
-    "South Delhi",
-    "West Delhi",
-    "East Delhi",
-  ],
-};
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    contactNumber: "",
+    role: "User",
+    category: "",
+    experience: "",
+    pricePerHour: "",
+  });
 
-  const [role, setRole] = useState("");
-
-  const [category, setCategory] = useState("Electrician");
-  const [experience, setExperience] = useState("");
-  const [pricePerHour, setPricePerHour] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
-
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
-
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
-
-    if (!role) {
-      setError(
-        "❌ Please select a profile role: Customer or Service Provider!",
-      );
-      return;
-    }
-    if (!selectedState || !selectedCity) {
-      setError("❌ Please select both State and City locations!");
-      return;
-    }
-
     setLoading(true);
 
+    const submissionData = { ...formData };
+    if (formData.role === "User") {
+      delete submissionData.category;
+      delete submissionData.experience;
+      delete submissionData.pricePerHour;
+    }
+
     try {
-      const payload = {
-        name,
-        email,
-        password,
-        role,
-        state: selectedState,
-        city: selectedCity,
-      };
-
-      if (role === "Provider") {
-        Object.assign(payload, {
-          category,
-          experience: Number(experience),
-          pricePerHour: Number(pricePerHour),
-          contactNumber,
-        });
-      }
-
       const response = await axios.post(
         "https://booking-hub-backend-plga.onrender.com/api/auth/register",
-        payload,
+        submissionData,
       );
-      if (response.data) {
-        setSuccess("🎉 Account created successfully! Redirecting to login...");
-        setTimeout(() => navigate("/login"), 2000);
+      if (response.data.success) {
+        alert("🎉 Registration successful! Please log in.");
+        navigate("/login");
       }
-    } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Registration failed. Please check network or try again.",
-      );
+    } catch (error) {
+      alert(error.response?.data?.message || "Registration failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 md:p-8">
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-4xl w-full grid md:grid-cols-2">
-        {/* Left Side Banner */}
-        <div className="hidden md:flex flex-col justify-center bg-blue-600 text-white p-12">
-          <h2 className="text-3xl font-bold mb-4">Market Ready Platform!</h2>
-          <p className="text-blue-100 text-sm">
-            Register either as a customer to book services or as a professional
-            provider to earn instantly.
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="max-w-md w-full bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <h2 className="text-xl font-black text-gray-800 text-center mb-1">
+          Create Account
+        </h2>
+        <p className="text-xs text-gray-400 text-center mb-6">
+          Join the live request system pool
+        </p>
 
-        <div className="p-6 md:p-10 flex flex-col justify-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Create Account
-          </h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
+              Full Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              required
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="John Doe"
+              className="w-full px-3 py-2 border text-xs rounded-xl focus:outline-blue-500"
+            />
+          </div>
 
-          {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-2 mb-4 text-xs font-semibold rounded">
-              {error}
-            </div>
-          )}
-          {success && (
-            <div className="bg-green-50 border-l-4 border-green-500 text-green-700 p-2 mb-4 text-xs font-semibold rounded">
-              {success}
-            </div>
-          )}
+          <div>
+            <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
+              Email Address
+            </label>
+            <input
+              type="email"
+              name="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="john@example.com"
+              className="w-full px-3 py-2 border text-xs rounded-xl focus:outline-blue-500"
+            />
+          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <div>
-              <label className="block text-amber-700 text-xs font-bold mb-1">
-                Join As (Select Carefully) *
-              </label>
-              <select
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                required
-                className="w-full px-3 py-2 rounded-lg border-2 border-amber-400 bg-amber-50 focus:ring-2 focus:ring-blue-500 text-sm font-bold text-gray-800"
-              >
-                <option value="">-- Choose Account Type --</option>
-                <option value="Customer">Customer (Need a Service)</option>
-                <option value="Provider">
-                  Service Provider (Want to Work)
-                </option>
-              </select>
-            </div>
+          <div>
+            <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              required
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="••••••••"
+              className="w-full px-3 py-2 border text-xs rounded-xl focus:outline-blue-500"
+            />
+          </div>
 
-            <div>
-              <label className="block text-gray-600 text-xs font-medium mb-1">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                required
-              />
-            </div>
+          <div>
+            <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
+              Contact Number
+            </label>
+            <input
+              type="text"
+              name="contactNumber"
+              required
+              value={formData.contactNumber}
+              onChange={handleChange}
+              placeholder="9876543210"
+              className="w-full px-3 py-2 border text-xs rounded-xl focus:outline-blue-500"
+            />
+          </div>
 
-            <div>
-              <label className="block text-gray-600 text-xs font-medium mb-1">
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                required
-              />
-            </div>
+          <div>
+            <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">
+              Select Profile Role
+            </label>
+            <select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border text-xs rounded-xl bg-white font-bold focus:outline-blue-500"
+            >
+              <option value="User">Standard Client (Request Services)</option>
+              <option value="Provider">
+                Service Expert (Grab & Earn Jobs)
+              </option>
+            </select>
+          </div>
 
-            <div>
-              <label className="block text-gray-600 text-xs font-medium mb-1">
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
+          {formData.role === "Provider" && (
+            <div className="p-3 bg-blue-50/50 rounded-xl border border-blue-100/50 space-y-3 animate-fadeIn">
               <div>
-                <label className="block text-gray-600 text-xs font-medium mb-1">
-                  State *
+                <label className="block text-[11px] font-bold text-blue-600 uppercase mb-1">
+                  Expert Category
                 </label>
                 <select
-                  value={selectedState}
-                  onChange={(e) => {
-                    setSelectedState(e.target.value);
-                    setSelectedCity("");
-                  }}
-                  required
-                  className="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+                  name="category"
+                  required={formData.role === "Provider"}
+                  value={formData.category}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border text-xs rounded-xl bg-white font-semibold focus:outline-blue-500"
                 >
-                  <option value="">Select State</option>
-                  {Object.keys(locationData).map((st) => (
-                    <option key={st} value={st}>
-                      {st}
-                    </option>
-                  ))}
+                  <option value="">-- Choose Category --</option>
+                  <option value="Electrician">Electrician</option>
+                  <option value="Plumber">Plumber</option>
+                  <option value="Cleaner">Cleaner</option>
+                  <option value="Carpenter">Carpenter</option>
                 </select>
               </div>
 
-              <div>
-                <label className="block text-gray-600 text-xs font-medium mb-1">
-                  City *
-                </label>
-                <select
-                  value={selectedCity}
-                  onChange={(e) => setSelectedCity(e.target.value)}
-                  required
-                  disabled={!selectedState}
-                  className="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white disabled:bg-gray-100"
-                >
-                  <option value="">Select City</option>
-                  {selectedState &&
-                    locationData[selectedState].map((ct) => (
-                      <option key={ct} value={ct}>
-                        {ct}
-                      </option>
-                    ))}
-                </select>
-              </div>
-            </div>
-
-            {role === "Provider" && (
-              <div className="space-y-3 border-t border-gray-100 pt-3">
+              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-gray-600 text-xs font-medium mb-1">
-                    Category
-                  </label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white"
-                  >
-                    <option value="Electrician">Electrician</option>
-                    <option value="Plumber">Plumber</option>
-                    <option value="Painter">Painter</option>
-                    <option value="Cleaner">Cleaner</option>
-                    <option value="Mechanic">Mechanic</option>
-                    <option value="Furniture">Furniture</option>
-                    <option value="AC Repair">AC Repair</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-gray-600 text-xs font-medium mb-1">
-                    Experience (Years)
+                  <label className="block text-[11px] font-bold text-blue-600 uppercase mb-1">
+                    Experience (Yrs)
                   </label>
                   <input
                     type="number"
-                    value={experience}
-                    onChange={(e) => setExperience(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                    required
+                    name="experience"
+                    required={formData.role === "Provider"}
+                    value={formData.experience}
+                    onChange={handleChange}
+                    placeholder="2"
+                    min="0"
+                    className="w-full px-3 py-2 border text-xs rounded-xl focus:outline-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-600 text-xs font-medium mb-1">
-                    Price Per Hour (₹)
+                  <label className="block text-[11px] font-bold text-blue-600 uppercase mb-1">
+                    Rate (₹ / hr)
                   </label>
                   <input
                     type="number"
-                    value={pricePerHour}
-                    onChange={(e) => setPricePerHour(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-gray-600 text-xs font-medium mb-1">
-                    Contact Number
-                  </label>
-                  <input
-                    type="text"
-                    value={contactNumber}
-                    onChange={(e) => setContactNumber(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border text-sm focus:ring-2 focus:ring-blue-500 outline-none"
-                    required
+                    name="pricePerHour"
+                    required={formData.role === "Provider"}
+                    value={formData.pricePerHour}
+                    onChange={handleChange}
+                    placeholder="250"
+                    min="0"
+                    className="w-full px-3 py-2 border text-xs rounded-xl focus:outline-blue-500"
                   />
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 text-sm mt-4 shadow transition-all"
-            >
-              {loading ? "Creating Account..." : "Sign Up"}
-            </button>
-          </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-xs hover:bg-blue-700 transition-colors disabled:bg-gray-300"
+          >
+            {loading ? "Registering Account..." : "Create Account 🚀"}
+          </button>
+        </form>
 
-          <p className="text-xs text-gray-600 text-center mt-4">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="text-blue-600 font-semibold hover:underline"
-            >
-              Sign In
-            </Link>
-          </p>
-        </div>
+        <p className="text-center text-xs text-gray-500 pt-2">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-600 font-bold hover:underline">
+            Login here
+          </Link>
+        </p>
       </div>
     </div>
   );
