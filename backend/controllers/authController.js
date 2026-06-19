@@ -4,30 +4,32 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs'); 
 const jwt = require('jsonwebtoken'); 
 
-
 const otpStore = {};
 
 // ==========================================
-// 1. REGISTER CONTROLLER (🔒 FIXED: City & State restriction removed!)
+// 1. REGISTER CONTROLLER (🔒 FULLY COMPLETE & FIXED)
 // ==========================================
 exports.register = async (req, res) => {
     try {
         const { name, email, password, role, city, state, category, pricePerHour, experience, contactNumber } = req.body;
-        
 
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'User already exists' });
+
+        // String values ko safely proper numbers mein parse kar rahe hain taaki zero na ho data
+        const parsedPrice = pricePerHour ? Number(pricePerHour) : 0;
+        const parsedExperience = experience ? Number(experience) : 0;
 
         const user = await User.create({ 
             name, 
             email, 
             password, 
-            role, 
-            city: city || 'Not Specified', // Fallback value set if missing from UI
-            state: state || 'Not Specified', // Fallback value set if missing from UI
-            category,
-            pricePerHour: role === 'Provider' ? Number(pricePerHour || 0) : 0,
-            experience: role === 'Provider' ? Number(experience || 0) : 0,
+            role: role || 'User', 
+            city: city || 'Not Specified', 
+            state: state || 'Not Specified', 
+            category: category || '',
+            pricePerHour: role === 'Provider' ? parsedPrice : 0,
+            experience: role === 'Provider' ? parsedExperience : 0,
             contactNumber: contactNumber || ''
         });
 
@@ -38,7 +40,7 @@ exports.register = async (req, res) => {
 };
 
 // ==========================================
-// 2. LOGIN CONTROLLER (🔒 UNTOUCHED: Same as your original code)
+// 2. LOGIN CONTROLLER (🔒 FULLY COMPLETE)
 // ==========================================
 exports.login = async (req, res) => {
     try {
@@ -82,7 +84,7 @@ exports.login = async (req, res) => {
 };
 
 // ==========================================
-// 3. FORGOT PASSWORD CONTROLLER (🔒 UNTOUCHED: Same as your original code)
+// 3. FORGOT PASSWORD CONTROLLER (🔒 FULLY COMPLETE)
 // ==========================================
 exports.forgotPassword = async (req, res) => {
     try {
@@ -134,7 +136,7 @@ Team Booking Hub ⚡`
 };
 
 // ==========================================
-// 4. RESET PASSWORD CONTROLLER (🔒 UNTOUCHED: Same as your original code)
+// 4. RESET PASSWORD CONTROLLER (🔒 FULLY COMPLETE)
 // ==========================================
 exports.resetPassword = async (req, res) => {
     try {
