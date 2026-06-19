@@ -1,6 +1,9 @@
 const Booking = require('../models/Booking');
 const User = require('../models/User');
 
+// ==========================================
+// 1. GET PUBLIC PROVIDERS (🔒 FULLY FIXED FOR PRICE & EXP)
+// ==========================================
 exports.getPublicProviders = async (req, res) => {
   try {
     const { category, state, city } = req.query;
@@ -8,20 +11,19 @@ exports.getPublicProviders = async (req, res) => {
       return res.status(400).json({ success: false, message: "Category is required" });
     }
 
-    
     let filter = {
       role: { $regex: new RegExp('^Provider$', 'i') },
       category: { $regex: new RegExp(`^${category}$`, 'i') }
     };
 
-    
     if (state && city) {
       filter.state = { $regex: new RegExp(`^${state}$`, 'i') };
       filter.city = { $regex: new RegExp(`^${city}$`, 'i') };
     }
 
+    // FIXED: Added 'pricePerHour' and 'experience' in select method below
     const providers = await User.find(filter).select(
-      'name email contactNumber averageRating successBookingsCount completedServices jobsDone state city'
+      'name email contactNumber averageRating successBookingsCount completedServices jobsDone state city pricePerHour experience'
     );
 
     return res.status(200).json({ 
@@ -33,7 +35,9 @@ exports.getPublicProviders = async (req, res) => {
   }
 };
 
-
+// ==========================================
+// 2. CREATE BOOKING
+// ==========================================
 exports.createBooking = async (req, res) => {
   try {
     const { category, bookingDate, expiryMinutes, visitingCharge } = req.body;
@@ -62,6 +66,9 @@ exports.createBooking = async (req, res) => {
   }
 };
 
+// ==========================================
+// 3. GET MY BOOKINGS
+// ==========================================
 exports.getMyBookings = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -83,12 +90,11 @@ exports.getMyBookings = async (req, res) => {
       })
       .populate({
         path: 'user',
-        select: 'name contactNumber role state city',
+        select: 'name contactNumber role state city pricePerHour experience', // Added missing fields here too just in case
       })
-      .populate('provider', 'name contactNumber state city')
+      .populate('provider', 'name contactNumber state city pricePerHour experience') // Added here too
       .sort({ createdAt: -1 });
 
-      
       bookings = bookings.filter(b => {
         if (b.status === 'Pending' && b.user) {
           return b.user.state === currentUser.state && b.user.city === currentUser.city;
@@ -99,7 +105,7 @@ exports.getMyBookings = async (req, res) => {
     } else {
       bookings = await Booking.find({ user: userId })
         .populate('user', 'name contactNumber role state city')
-        .populate('provider', 'name contactNumber state city')
+        .populate('provider', 'name contactNumber state city pricePerHour experience') // Added here too
         .sort({ createdAt: -1 });
     }
 
@@ -109,7 +115,9 @@ exports.getMyBookings = async (req, res) => {
   }
 };
 
-
+// ==========================================
+// 4. UPDATE BOOKING STATUS
+// ==========================================
 exports.updateBookingStatus = async (req, res) => {
   try {
     const { bookingId, status, providerEta } = req.body;
@@ -129,7 +137,9 @@ exports.updateBookingStatus = async (req, res) => {
   }
 };
 
-
+// ==========================================
+// 5. MARK SATISFIED
+// ==========================================
 exports.markSatisfied = async (req, res) => {
   try {
     const { bookingId } = req.body;
@@ -142,7 +152,9 @@ exports.markSatisfied = async (req, res) => {
   } catch (error) { return res.status(500).json({ success: false, message: error.message }); }
 };
 
-
+// ==========================================
+// 6. FINAL COMPLETE
+// ==========================================
 exports.finalComplete = async (req, res) => {
   try {
     const { bookingId } = req.body;
@@ -165,7 +177,9 @@ exports.finalComplete = async (req, res) => {
   } catch (error) { return res.status(500).json({ success: false, message: error.message }); }
 };
 
-
+// ==========================================
+// 7. SUBMIT RATING
+// ==========================================
 exports.submitRating = async (req, res) => {
   try {
     const { bookingId, rating, review } = req.body;
