@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
-// 📊 State aur City ka correct data
 const stateCityData = {
   Rajasthan: [
     "Sri Ganganagar",
@@ -37,7 +36,6 @@ const Register = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Agar State badle, toh City ko reset kar do taaki purani city select na reh jaye
     if (name === "state") {
       setFormData({ ...formData, state: value, city: "" });
     } else {
@@ -143,7 +141,6 @@ const Register = () => {
             />
           </div>
 
-          {/* Dynamic State and City Select Dropdowns */}
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="block text-[11px] font-bold text-gray-500 uppercase mb-1">

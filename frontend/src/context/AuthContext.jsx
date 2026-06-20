@@ -8,11 +8,9 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [loading, setLoading] = useState(true);
 
-  // 🔥 GLOBAL HEADERS LOCK: Yeh interceptor har ek request mein secret key jodega
   useEffect(() => {
     const requestInterceptor = axios.interceptors.request.use(
       (config) => {
-        // Yeh wahi key hai jo tumne backend ke code mein validation ke liye daali hai
         config.headers["x-api-secret"] = "MY_FALLBACK_SECRET_KEY";
         return config;
       },
@@ -21,7 +19,6 @@ export const AuthProvider = ({ children }) => {
       },
     );
 
-    // Clean up interceptor on unmount
     return () => {
       axios.interceptors.request.eject(requestInterceptor);
     };

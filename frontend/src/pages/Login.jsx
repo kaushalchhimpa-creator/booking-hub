@@ -43,7 +43,6 @@ const Login = () => {
   return (
     <div className="min-h-[calc(100vh-73px)] bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-4xl w-full grid md:grid-cols-2">
-        {/* Left Side: Brand Banner */}
         <div className="hidden md:flex flex-col justify-center bg-blue-600 text-white p-12">
           <h2 className="text-3xl font-bold mb-4">
             Professional Services, One Click Away!

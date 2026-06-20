@@ -6,7 +6,6 @@ const Navbar = () => {
   const { token, user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Mobile menu open/close karne ke liye safe internal UI state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleBookingsClick = (e) => {
@@ -30,7 +29,6 @@ const Navbar = () => {
           Booking Hub <span className="text-amber-500">⚡</span>
         </div>
 
-        {/* 🍔 HAMBURGER TOGGLE BUTTON: Only visible on mobile */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           type="button"
@@ -61,7 +59,6 @@ const Navbar = () => {
           </svg>
         </button>
 
-        {/* DESKTOP VIEW VIEWPORT LINKS (Hidden on mobile) */}
         <div className="hidden sm:flex items-center gap-4 sm:gap-6">
           <Link
             to="/"
@@ -113,7 +110,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* 📱 MOBILE DROPDOWN DRAWER PANEL (Only shows when menu clicked) */}
       {isMenuOpen && (
         <div className="sm:hidden mt-4 pt-4 border-t border-gray-200/60 flex flex-col gap-3 animate-fadeIn">
           <Link
