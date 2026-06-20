@@ -222,7 +222,6 @@ const Register = () => {
                   <option value="Electrician">Electrician</option>
                   <option value="Plumber">Plumber</option>
                   <option value="Cleaner">Cleaner</option>
-                  <option value="Carpenter">Carpenter</option>
                   <option value="Furniture">Furniture</option>
                   <option value="Painter">Painter</option>
                   <option value="Mechanic">Mechanic</option>
