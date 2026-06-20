@@ -16,7 +16,6 @@ exports.register = async (req, res) => {
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-        // String values ko safely proper numbers mein parse kar rahe hain taaki zero na ho data
         const parsedPrice = pricePerHour ? Number(pricePerHour) : 0;
         const parsedExperience = experience ? Number(experience) : 0;
 

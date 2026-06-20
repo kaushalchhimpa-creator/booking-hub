@@ -21,7 +21,6 @@ exports.getPublicProviders = async (req, res) => {
       filter.city = { $regex: new RegExp(`^${city}$`, 'i') };
     }
 
-    // FIXED: Added 'pricePerHour' and 'experience' in select method below
     const providers = await User.find(filter).select(
       'name email contactNumber averageRating successBookingsCount completedServices jobsDone state city pricePerHour experience'
     );
