@@ -101,12 +101,14 @@ exports.forgotPassword = async (req, res) => {
             expiresAt: Date.now() + 5 * 60 * 1000 
         };
 
-      const transporter = nodemailer.createTransport({
+
+const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
-    secure: true, // true for 465, false for other ports
+    secure: true, 
+    family: 4, 
     auth: {
-        user: process.env.EMAIL_USER,  
+        user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     }
 });
