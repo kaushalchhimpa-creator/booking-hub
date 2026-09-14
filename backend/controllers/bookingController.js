@@ -208,3 +208,21 @@ exports.submitRating = async (req, res) => {
     return res.status(200).json({ success: true, message: "⭐ Rating submitted and provider profile updated successfully!", data: booking });
   } catch (error) { return res.status(500).json({ success: false, message: error.message }); }
 };
+
+// Admin data is kept separate from the regular booking feed so client data is
+// only exposed to authenticated administrators.
+exports.getAdminOverview = async (req, res) => {
+  try {
+    const [bookings, staff] = await Promise.all([
+      Booking.find({})
+        .populate('user', 'name email contactNumber')
+        .populate('provider', 'name email contactNumber')
+        .sort({ createdAt: -1 }),
+      User.find({ role: 'Provider' }).select('name email contactNumber').sort({ name: 1 })
+    ]);
+
+    return res.status(200).json({ success: true, data: { bookings, staff } });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
