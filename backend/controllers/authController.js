@@ -15,8 +15,6 @@ exports.register = async (req, res) => {
 
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'User already exists' });
-        // Admin accounts must be provisioned by the system, never through the public registration form.
-        if (role === 'Admin') return res.status(403).json({ message: 'Admin registration is not allowed' });
 
         const parsedPrice = pricePerHour ? Number(pricePerHour) : 0;
         const parsedExperience = experience ? Number(experience) : 0;

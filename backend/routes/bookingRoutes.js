@@ -9,20 +9,17 @@ const {
   markSatisfied, 
   finalComplete,
   getPublicProviders,
-  submitRating,
-  getAdminOverview
+  submitRating
 } = require('../controllers/bookingController');
 
 
-const { protect, requireAdmin } = require('../config/authMiddleware');
+const { protect } = require('../config/authMiddleware'); 
 
 router.get('/public-providers', getPublicProviders);
 
 router.post('/book', protect, createBooking);
 
 router.get('/my-bookings', protect, getMyBookings);
-
-router.get('/admin/overview', protect, requireAdmin, getAdminOverview);
 
 router.put('/status', protect, updateBookingStatus);
 

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
@@ -75,15 +75,6 @@ const Navbar = () => {
             My Bookings 📂
           </Link>
 
-          {user?.role === "Admin" && (
-            <Link
-              to="/admin"
-              className="text-sm font-bold text-gray-700 hover:text-blue-600 flex items-center gap-1 bg-gray-50 hover:bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-200 transition-all"
-            >
-              Admin Panel ⚙️
-            </Link>
-          )}
-
           {!token ? (
             <button
               onClick={() => navigate("/login")}
@@ -140,16 +131,6 @@ const Navbar = () => {
             <span>My Bookings</span>
             <span>📂</span>
           </Link>
-
-          {user?.role === "Admin" && (
-            <Link
-              to="/admin"
-              onClick={() => setIsMenuOpen(false)}
-              className="text-sm font-bold text-gray-700 hover:text-blue-600 flex items-center justify-between bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-2xs"
-            >
-              <span>Admin Panel</span><span>⚙️</span>
-            </Link>
-          )}
 
           {!token ? (
             <button
